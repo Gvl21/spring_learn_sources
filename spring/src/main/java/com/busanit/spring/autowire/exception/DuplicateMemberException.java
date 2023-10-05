@@ -1,4 +1,4 @@
-package com.busanit.spring.di;
+package com.busanit.spring.autowire.exception;
 
 public class DuplicateMemberException extends RuntimeException {
 

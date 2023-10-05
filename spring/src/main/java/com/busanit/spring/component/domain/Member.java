@@ -1,4 +1,6 @@
-package com.busanit.spring.di;
+package com.busanit.spring.component.domain;
+
+import com.busanit.spring.component.exception.WrongPasswordException;
 
 import java.time.LocalDateTime;
 

@@ -1,15 +1,22 @@
-package com.busanit.spring.di;
+package com.busanit.spring.di.main;
 
+import com.busanit.spring.di.config.AppContext;
+import com.busanit.spring.di.config.AppContext5;
+import com.busanit.spring.di.domain.RegisterRequest;
+import com.busanit.spring.di.exception.DuplicateMemberException;
+import com.busanit.spring.di.exception.MemberNotFoundException;
+import com.busanit.spring.di.exception.WrongPasswordException;
+import com.busanit.spring.di.service.*;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.Scanner;
 
-public class MainforSpring {
+public class MainforSpring5 {
     private static AnnotationConfigApplicationContext context = null;
 
     public static void main(String[] args) {
         // 스프링 컨테이너 생성
-        context = new AnnotationConfigApplicationContext(AppContext.class);
+        context = new AnnotationConfigApplicationContext(AppContext5.class);
         // 사용자의 입력 받기
         Scanner scn = new Scanner(System.in);
         while (true) {
@@ -29,18 +36,49 @@ public class MainforSpring {
             } else if (command.startsWith("change ")){
                 processChangeCommand(command.split(" "));
                 continue;
-            } else printHelp();
+            } else if(command.equals("list")){
+                processListCommand();
+                continue;
+            } else if(command.startsWith("info ")){
+                processInfoCommand(command.split(" "));
+                continue;
+            }else if(command.equals("version")){
+                processVersionCommand();
+                continue;
+            }else printHelp();
         }
 
     }
+
+    private static void processVersionCommand() {
+        // Bean 객체가 아닌 경우 getBean할 때
+//        MemberPrinter bean = context.getBean(MemberPrinter.class);
+        VersionPrinter versionPrinter = context.getBean("versionPrinter", VersionPrinter.class);
+        versionPrinter.print();
+
+    }
+
 
     private static void printHelp() {
         System.out.println("명령어 사용법");
         System.out.println("exit : 프로그램이 종료됩니다.");
         System.out.println("new 이메일 이름 암호 암호확인");
         System.out.println("change 이메일 현재비밀번호 변경비밀번호");
+        System.out.println("list : 저장된 회원 목록 보기");
+        System.out.println("info 이메일");
+        System.out.println("version : 버전 정보");
     }
+    private static void processInfoCommand(String[] args) {
+        if (args.length != 2) return;
+        MemberInfoPrinter memberInfoPrinter = context.getBean("memberInfoPrinter", MemberInfoPrinter.class);
+        memberInfoPrinter.printMemberInfo(args[1]);
 
+    }
+    private static void processListCommand(){
+        MemberListPrinter memberListPrinter = context.getBean("memberListPrinter", MemberListPrinter.class);
+        memberListPrinter.printAll();
+    }
+    
     private static void processChangeCommand(String[] args) {
         if (args.length != 4) return;
         ChangePasswordService changePasswordService = context.getBean("changePasswordService", ChangePasswordService.class);

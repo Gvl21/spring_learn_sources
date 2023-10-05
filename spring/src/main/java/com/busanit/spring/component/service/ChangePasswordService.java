@@ -1,4 +1,9 @@
-package com.busanit.spring.di;
+package com.busanit.spring.component.service;
+
+import com.busanit.spring.autowire.exception.MemberNotFoundException;
+import com.busanit.spring.component.domain.Member;
+import com.busanit.spring.component.domain.MemberDao;
+import org.springframework.beans.factory.annotation.Autowired;
 
 // 관심사 : 비밀번호를 바꾸는 것
 public class ChangePasswordService {
@@ -7,6 +12,8 @@ public class ChangePasswordService {
         this.memberDao = memberDao;
     }
 
+    // 자동 주입 기능 : 의존 객체를 명시하지 않아도, 스프링이 필요한 의존 빈 객체를 찾아서 주입
+    @Autowired
     private MemberDao memberDao;
 
     // 비밀번호 변경

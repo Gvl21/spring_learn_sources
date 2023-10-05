@@ -1,4 +1,4 @@
-package com.busanit.spring.di;
+package com.busanit.spring.component.exception;
 
 public class WrongPasswordException extends RuntimeException {
 }

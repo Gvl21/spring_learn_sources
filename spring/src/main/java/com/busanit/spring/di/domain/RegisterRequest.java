@@ -1,4 +1,4 @@
-package com.busanit.spring.di;
+package com.busanit.spring.di.domain;
 
 // 회원 가입을 처리할 때 필요한 데이터를 가지고 있는 클래스
 public class RegisterRequest {

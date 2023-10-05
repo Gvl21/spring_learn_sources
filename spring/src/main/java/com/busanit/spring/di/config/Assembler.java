@@ -1,4 +1,8 @@
-package com.busanit.spring.di;
+package com.busanit.spring.di.config;
+
+import com.busanit.spring.di.domain.MemberDao;
+import com.busanit.spring.di.service.ChangePasswordService;
+import com.busanit.spring.di.service.MemberRegisterService;
 
 // 각각의 클래스를 조합해주는 조립기
 public class Assembler {

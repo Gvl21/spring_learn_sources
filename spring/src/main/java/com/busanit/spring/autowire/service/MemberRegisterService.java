@@ -1,15 +1,25 @@
-package com.busanit.spring.di;
+package com.busanit.spring.autowire.service;
+
+import com.busanit.spring.autowire.domain.Member;
+import com.busanit.spring.autowire.domain.MemberDao;
+import com.busanit.spring.autowire.domain.RegisterRequest;
+import com.busanit.spring.autowire.exception.DuplicateMemberException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 
 // 회원 등록 서비스, 서비스 레이어, 관심사 : 회원 등록
 public class MemberRegisterService {
     // 데이터 접근 객체를 필드로 컴포지션
+    @Autowired
     private MemberDao memberDao;
     // 생성자를 통래서 의존객체를 주입받음
     public MemberRegisterService(MemberDao memberDao) {
         // 주입받은 객체를 필드에 할당
         this.memberDao = memberDao;
+    }
+
+    public MemberRegisterService() {
     }
 
     // 회원 등록 로직

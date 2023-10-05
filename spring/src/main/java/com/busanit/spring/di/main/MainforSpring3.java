@@ -1,9 +1,24 @@
-package com.busanit.spring.di;
+package com.busanit.spring.di.main;
+
+import com.busanit.spring.di.config.AppContext1;
+import com.busanit.spring.di.config.AppContext2;
+import com.busanit.spring.di.config.AppContext3;
+import com.busanit.spring.di.domain.RegisterRequest;
+import com.busanit.spring.di.exception.DuplicateMemberException;
+import com.busanit.spring.di.exception.MemberNotFoundException;
+import com.busanit.spring.di.exception.WrongPasswordException;
+import com.busanit.spring.di.service.*;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.Scanner;
 
-public class MainforAssembler {
+public class MainforSpring3 {
+    private static AnnotationConfigApplicationContext context = null;
+
     public static void main(String[] args) {
+        // 스프링 컨테이너 생성
+        // 2개 이상의 설정 정보 파일 사용하기
+        context = new AnnotationConfigApplicationContext(AppContext3.class);
         // 사용자의 입력 받기
         Scanner scn = new Scanner(System.in);
         while (true) {
@@ -23,21 +38,50 @@ public class MainforAssembler {
             } else if (command.startsWith("change ")){
                 processChangeCommand(command.split(" "));
                 continue;
-            } else printHelp();
+            } else if(command.equals("list")){
+                processListCommand();
+                continue;
+            } else if(command.startsWith("info ")){
+                processInfoCommand(command.split(" "));
+                continue;
+            }else if(command.equals("version")){
+                processVersionCommand();
+                continue;
+            }else printHelp();
         }
 
     }
-    private static Assembler assembler =  new Assembler();
+
+    private static void processVersionCommand() {
+        VersionPrinter versionPrinter = context.getBean("versionPrinter", VersionPrinter.class);
+        versionPrinter.print();
+
+    }
+
+
     private static void printHelp() {
         System.out.println("명령어 사용법");
         System.out.println("exit : 프로그램이 종료됩니다.");
         System.out.println("new 이메일 이름 암호 암호확인");
         System.out.println("change 이메일 현재비밀번호 변경비밀번호");
+        System.out.println("list : 저장된 회원 목록 보기");
+        System.out.println("info 이메일");
+        System.out.println("version : 버전 정보");
     }
+    private static void processInfoCommand(String[] args) {
+        if (args.length != 2) return;
+        MemberInfoPrinter memberInfoPrinter = context.getBean("memberInfoPrinter", MemberInfoPrinter.class);
+        memberInfoPrinter.printMemberInfo(args[1]);
 
+    }
+    private static void processListCommand(){
+        MemberListPrinter memberListPrinter = context.getBean("memberListPrinter", MemberListPrinter.class);
+        memberListPrinter.printAll();
+    }
+    
     private static void processChangeCommand(String[] args) {
         if (args.length != 4) return;
-        ChangePasswordService changePasswordService = assembler.getChangePasswordService();
+        ChangePasswordService changePasswordService = context.getBean("changePasswordService", ChangePasswordService.class);
         try{
             changePasswordService.changePassword(args[1],args[2],args[3]);
             System.out.println("암호가 변경되었습니다.");
@@ -57,7 +101,7 @@ public class MainforAssembler {
             return;
         }
         // 인자 길이가 유효하면, 회원 가입 서비스를 실행 => 조립기로부터 비지니스 로직이 담긴 Service 객체 반환
-        var memberRegisterService = assembler.getMemberRegisterService();
+        var memberRegisterService = context.getBean("memberRegisterService", MemberRegisterService.class);
         // 회원 가입 요청 객체에서 회원 가입 데이터를 받아
         RegisterRequest registerRequest = new RegisterRequest();
 

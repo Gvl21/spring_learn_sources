@@ -1,5 +1,6 @@
-package com.busanit.spring.di;
+package com.busanit.spring.autowire.domain;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,4 +28,8 @@ public class MemberDao {
         map.put(member.getEmail(), member);
     }
 
+    // READ ALL
+    public Collection<Member> selectAll(){
+        return map.values();
+    }
 }
