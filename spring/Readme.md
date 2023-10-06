@@ -153,3 +153,83 @@
     - 명시적 읜존 주입, 자동 의존 주입은 섞어서 사용하지 않는 편이 좋다 => 자동 주입을 사용하는 트렌드
 
 ## 컴포넌트 스캔
+  - @Component 애노테이션을 붙인 클래스를 패키지 기준으로 검색해서 스프링 빈으로 자동 등록
+  - 설정 클래스에서 @Componentscan 애노테이션을 적용한다.
+  - 컴포넌트 스캔 범위 @ComponentScan 애노테이션 패키지 아래를 검색
+  - 컴포넌트 스캔 대상
+    - @Component : 기본 스캔 대상 컴포넌트
+    - @Controler : 스프링 MVC 컨트롤러
+    - @Service : 스프링 비즈니스 로직 담당
+    - @Repository : 스프링 데이터 접근 계층
+    - @Configuration : 스프링 설정 정보
+  - 컴포넌트 스캔 대상 범위 동일한 타입이 빈이 2가지 있을 경우
+    - 충돌이 발생
+      - 필터로 예외처리하거나,
+      - 컴포넌트의 이름을 변경하거나 
+      - 불필요한 경우 컴포넌트에서 제외
+
+## 스프링 빈의 생명주기
+  - 스프링 컨테이너 생성 -> 스프링 빈 생성 -> 의존관계 주입 -> 초기화 -> 사용(getBean) -> 소멸(destroy) -> 스프링 컨테이너 종료
+  - 빈 생성 단계
+    1. 자바 객체 생성할 때 처럼 Bean 객체 초기화
+    2. Bean 객체 스캔하고 관련 프로퍼티를 세팅한다.
+    3. afterPropertiesSet() 메서드 실행
+    4. @initMethod 실행
+  - 빈 소멸 단계
+    1. @PreDestroy 실행
+    2. destroy() 실행
+  
+### 생명주기 콜백
+- 인터페이스 구현 : InitializingBean, DisposableBean
+- 어노테이션 파라미터 사용 : @initMethod, @PreDestroy
+
+### Bean의 관리 범위 (스코프)
+    - singleton : (기본범위), 모든 스프링 컨테이너에 하나의 객체만 생성
+    - prototype : 객체별로 각각 생성
+    - request : HTTP 요청마다 하나의 빈
+    - session : HTTP 세션마다 하나의 빈
+    - application : 서블릿 컨테이너마다 하나의 빈
+    - websocket : 웹 소켓마다 하나의 빈
+    - [스프링 공식문서](https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html)
+
+## AOP(Aspect Oriented Programming)
+    - 핵심 기능과 분리된 공통 부가기능을 관심사(Aspect)로 정의하고 모듈로 만든 것
+    - 객체지향 프로그래밍을 보완하는 수단
+    - 핵심용어
+        - Advice (언제) 공통기능을 호출할지 정의한느 것
+            - Around : 메서드 실행 전 후
+            - Before : 메서드 호출 전
+            - After : 메서드 실행 수 반드시 실행 (finally)
+            - After Returning : 조인포인트 정상 완료시 (try)
+            - After Throwing : 예외 발생 시 실행 (exception)
+        - JoinPoint : (어디에) 적용 가능한 지점
+        - PointCut : 조인포인트 중 적용될 지점을 선별
+        - Weaving : Advicer를 핵심 로직에 적용하는 것
+        - Aspect : 공통으로 적용될 기능(관심사)
+    - 스프링 설정 정보 @EnableAspectJAutoProxy
+        - 자동으로 등록된 빈에서 @Aspect를 검색해서 프록시를 생성해준다.
+        - Proxy(대리자)는 원본 객체 대신 프록시 객체를 가져와 
+        - 메서드를 호출할 때 Aspect를 적용한다.
+## Database 연결
+- 의존성 연결
+```
+    // MySQL 연결 JDBC 드라이버
+     implementation 'mysql:mysql-connector-java:8.0.33'
+     // DB 커넥션 풀 제공
+     implementation 'org.apache.tomcat:tomcat-jdbc'
+     // jdbcTemplate 등 JDBC 연동 기능 제공
+     implementation 'org.springframework:spring-jdbc'
+```
+- 커넥션 풀
+    - 자바 프로그램과 DBMS 연결 시간이 길기 때문에 성능에 영향을 줄 수 있다. 커넥션 풀에서 커넥션을 미리 만들어서 가져와 사용한 후, 커넥션 풀에 반납해서, 동시 접속자가 많더라도, 커넥션을 생성하지 않고 커넥션 풀에서 가져와서 사용할 수 있다.
+    - 많이 사용하는 커넥션 풀 라이브러리 HikariCP, Tomcat JDBC
+
+- JDBC 템플릿
+    - JdbcTemplate을 이용한 조회 쿼리
+    - query(String sql, RowMapper<T>, Objects... args )
+        - 첫번째 매개변수 SQL문
+        - 두번째 매개변수 쿼리 결과와 자바 객체의 매핑
+            - SQL문 결과 셋과 자바 객체(Member)를 매칭
+            - SQL 결과 컬럼과 자바 객체 필드의 타입을 일치시킨다.
+            - RowMapper 인터페이스의 구현 클래스 -> 람다식 변경 가능
+        - 세번째 매개변수 (필수아님) ? 에 들어갈 인자 
