@@ -136,7 +136,7 @@
   - 의존 자동 주입 기능을 이용해서 주입대상은 모두 스프링 빈으로 등록하는 추세
 
 ## 의존 자동 주입
-  - Autowired 애노테이션을 이용한 자동 주입
+  - @Autowired 애노테이션을 이용한 자동 주입
   - 필드, 메서드, 파라미터, 생성자 등 다양한 의존 주입할 대상에 애노테이션을 사용
   - 스프링 컨테이너에서 동일한 타입의 Bean객체를 찾아 자동 주입
   - 동일한 타입이 없을 경우 -> 예외 발생
@@ -233,3 +233,52 @@
             - SQL 결과 컬럼과 자바 객체 필드의 타입을 일치시킨다.
             - RowMapper 인터페이스의 구현 클래스 -> 람다식 변경 가능
         - 세번째 매개변수 (필수아님) ? 에 들어갈 인자 
+    - update(sql, args....)
+      - DB에서 삽입, 삭제, 수정 SQL문을 사용할 경우
+      - 첫번째 파라미터 SQL문
+      - 두번째 파라미터부터 해당 인자
+    - PreparedStatementCreator
+      - PreparesStatement 를 SQL문 대신 만들어서 파라미터를 삽입할 수 있다.
+    - Keyholder
+      - DB에서 자동으로 생성된 키 값을 구하기 위해
+      - PreparesStatement 에서 두번째 파라미터 값으로 String[]{"ID"}를 주어서
+      - DB에서 생성된 ID 컬럼 값을 가져올 수 있다.
+
+## Spring에서 트랜잭션 처리
+- 두 개 이상의 쿼리문을 한 작업으로 실행해야 할 때, 트랜잭션으로 논리적으로 하나의 작업으로 묶어준다.
+- 일반적으로 Service 계층에서 여러 쿼리문이 묶인다.
+- @Transactional 애노테이션을 통해서 트랜잭션 범위 지정
+
+- 핵심 기술
+1. 트랜잭션 동기화
+2. 트랜잭션 추상화
+3. AOP를 이용한 트랜잭션 관심사 분리
+
+- PlatformTransactionManager를 통해 관리
+- 프록시 객체를 통해 커밋, 롤백을 수행
+- @Transactional의 주요 속성
+  - propagation : 트랜잭션의 전파타입, 기본값 : REQUIRED
+    - REQUIRED : 현재 진행 중인 트랜잭션이 존재하면, 해당 트랜잭션 사용, 존재하지 않으면, 새로운 트랜잭션 생성
+    - REQUIRES_NEW : 항상 새로운 트랜잭션이 필요
+  - isolation : 트랜잭션의 격리레벨, 기본값 : DEFAULT
+    - DEFAULT : 기본값
+    - READ-UNCOMMITED : 다른 트랜잭션이 커밋하지 않은 데이터를 읽을 수 있다.
+    - SERIALIZABLE : 동일한 데이터에 대해서 두 개 이상 트랜잭션 수행 불가
+  - readOnly : 기본값 : false  
+    - true로 설정하게 될 경우 INSERT, UPDATE, DELETE 불가 (SELECT만 가능)
+
+
+## SPRING MVC
+- Model
+- View
+- Controller
+---
+- 프론트 콘트롤러 패턴
+  - DispatcherServlet : 웹 브라우저로부터 요청이 들어오면, 앞단에서 모든 연결과 요청을 담당한다.
+    - 요청을 처리하기 위한 컨트롤러를 검색
+      - HandlerMapping 빈 객체를 통해서 컨트롤러 검색
+      - (Controller)
+      - HanlderAdapter 컨트롤러 메서드에 알맞은 메서드를 호출
+      - (Model)
+      - ViewResolver 이름에 해당하는 View 객체를 찾아서 생성하고 리턴
+      - (View)

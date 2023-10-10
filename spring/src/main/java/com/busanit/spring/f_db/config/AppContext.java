@@ -5,10 +5,14 @@ import com.busanit.spring.f_db.service.*;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
+@EnableTransactionManagement
 public class AppContext {
-
+    // 데이터 소스
     @Bean(destroyMethod = "close")
     public DataSource dataSource() {
         DataSource dataSource = new DataSource();
@@ -21,8 +25,15 @@ public class AppContext {
         // 커넥션 풀 최대 개수
         dataSource.setMaxActive(100);
         return dataSource;
-
     }
+    // 트랜잭션 관리자 설정
+    @Bean
+    public PlatformTransactionManager transactionManager(){
+        DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();
+        transactionManager.setDataSource(dataSource());
+        return transactionManager;
+    }
+
 
     // DAO 의존성 주입
     @Bean
