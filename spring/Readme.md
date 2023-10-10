@@ -268,17 +268,3 @@
     - true로 설정하게 될 경우 INSERT, UPDATE, DELETE 불가 (SELECT만 가능)
 
 
-## SPRING MVC
-- Model
-- View
-- Controller
----
-- 프론트 콘트롤러 패턴
-  - DispatcherServlet : 웹 브라우저로부터 요청이 들어오면, 앞단에서 모든 연결과 요청을 담당한다.
-    - 요청을 처리하기 위한 컨트롤러를 검색
-      - HandlerMapping 빈 객체를 통해서 컨트롤러 검색
-      - (Controller)
-      - HanlderAdapter 컨트롤러 메서드에 알맞은 메서드를 호출
-      - (Model)
-      - ViewResolver 이름에 해당하는 View 객체를 찾아서 생성하고 리턴
-      - (View)
