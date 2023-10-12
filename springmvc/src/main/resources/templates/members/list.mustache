@@ -1,0 +1,21 @@
+{{>layout/header}}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">이메일</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!--  객체 데이터를 사용하는 범위  -->
+    {{#memberList}}
+        <tr>
+            <th>{{id}}</th>
+            <td>{{email}}</td>
+        </tr>
+    {{/memberList}}
+    <!--  객체 데이터를 사용하는 범위  -->
+    </tbody>
+</table>
+{{>layout/footer}}

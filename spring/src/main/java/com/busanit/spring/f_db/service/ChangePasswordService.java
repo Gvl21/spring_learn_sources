@@ -16,13 +16,10 @@ public class ChangePasswordService {
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
     public void changePassword(String email, String oldPassword, String newPassword) {
         Member member = memberDao.selectByEmail(email);
-        // 1. 해당 email이 존재하는가 => if not => Exception
         if (member == null) {
             throw new MemberNotFoundException();
         }
-        // 2. else 비밀번호 변경해라.
         member.changePassword(oldPassword, newPassword);
-        // 3. dao를 통해 데이터에 반영해라.
         memberDao.update(member);
     }
 

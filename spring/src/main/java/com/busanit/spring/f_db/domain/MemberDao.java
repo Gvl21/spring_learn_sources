@@ -2,10 +2,13 @@ package com.busanit.spring.f_db.domain;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
@@ -25,21 +28,24 @@ public class MemberDao {
     // JDBCTemplate을 이용한 조회 쿼리
     // query(String sql, RowMapper<T>, Objects... args)
     // 첫번째 매개변수 SQL문
-    // 두번째 매개변수 쿼리결과와 자바 객체으 ㅣ매핑
+    // 두번째 매개변수 쿼리결과와 자바 객체의 매핑
     // 세번째 매개변수 (필수아님) ? 에 들어갈 인자
     public Member selectByEmail(String email) {
        List<Member> result = jdbcTemplate.query(
-                "select * from member where EMAIL = ?", (rs, rowNum) -> {
-                    Member member = new Member(
-                            rs.getString("EMAIL"),
-                            rs.getString("PASSWORD"),
-                            rs.getString("NAME"),
-                            rs.getTimestamp("REGDATE").toLocalDateTime()
-                    );
-                    member.setId(rs.getLong("ID"));
-                    return member;
+                "select * from member where EMAIL = ?", new RowMapper<Member>() {
+                   @Override
+                   public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
+                       Member member = new Member(
+                               rs.getString("EMAIL"),
+                               rs.getString("PASSWORD"),
+                               rs.getString("NAME"),
+                               rs.getTimestamp("REGDATE").toLocalDateTime()
+                       );
+                       member.setId(rs.getLong("ID"));
+                       return member;
 
-                }, email);
+                   }
+               }, email);
         // 결과문이 List에 담겨서 오기 때문에, 객체를 꺼내줘야 한다.
         return result.isEmpty() ? null : result.get(0);
     }

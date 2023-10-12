@@ -20,7 +20,6 @@ public class DBConfig {
         // 커넥션 풀 최대 개수
         dataSource.setMaxActive(100);
         return dataSource;
-
     }
 
     @Bean

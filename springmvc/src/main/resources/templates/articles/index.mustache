@@ -1,0 +1,24 @@
+{{>layout/header}}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">제목</th>
+        <th scope="col">내용</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!--  객체 데이터를 사용하는 범위  -->
+    {{#articleList}}
+        <tr>
+            <th>{{id}}</th>
+            <td>{{title}}</td>
+            <td>{{content}}</td>
+
+        </tr>
+    {{/articleList}}
+    <!--  객체 데이터를 사용하는 범위  -->
+    </tbody>
+</table>
+{{>layout/footer}}
