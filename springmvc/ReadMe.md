@@ -96,3 +96,8 @@
     - 모든 필드는 private
     - getter / setter
   - Spring Bean 과는 다름 (스프링빈 : 스프링에서 관리하는 객체)
+
+- CommandLineRunner 인터페이스
+  - 스프링 부트 앱 구동 시점에 코드를 실행시킬 때 사용
+  - @Component 애노테이션 선언으로 컴포넌트 스캔
+  - 구동 시점에 run 메소드를 실행
