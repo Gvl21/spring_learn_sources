@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+// 스프링부트 앱 초기 구동시 실행되는 커맨드라인러너
 @Component
 public class DataInitializer implements CommandLineRunner {
 

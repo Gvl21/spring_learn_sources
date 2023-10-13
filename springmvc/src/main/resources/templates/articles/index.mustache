@@ -1,5 +1,10 @@
 {{>layout/header}}
 
+{{#msg}}
+    {{msg}}
+{{/msg}}
+
+
 <table class="table">
     <thead>
     <tr>
@@ -13,12 +18,14 @@
     {{#articleList}}
         <tr>
             <th>{{id}}</th>
-            <td>{{title}}</td>
-            <td>{{content}}</td>
+            <td><a href="/article/{{id}}"> {{title}}</a></td>
+            <td><a href="/article/{{id}}"> {{content}}</a></td>
 
         </tr>
     {{/articleList}}
     <!--  객체 데이터를 사용하는 범위  -->
     </tbody>
 </table>
+
+<a href="/article/new"> 새 글 작성하기 </a>
 {{>layout/footer}}

@@ -5,19 +5,23 @@
     <tr>
         <th scope="col">ID</th>
         <th scope="col">이메일</th>
+        <th scope="col">비밀번호</th>
     </tr>
     </thead>
     <tbody>
     <!--  객체 데이터를 사용하는 범위  -->
-    {{#memberList}}
-        <tr>
-            <th>{{id}}</th>
-            <td><a href="/member/{{id}}">{{email}}</td>
-        </tr>
-    {{/memberList}}
+    {{#member}}
+    <tr>
+        <th>{{id}}</th>
+        <td>{{email}}</td>
+        <td>{{pass}}</td>
+
+    </tr>
+    {{/member}}
     <!--  객체 데이터를 사용하는 범위  -->
     </tbody>
 </table>
-<a href="/member/new"> 새 회원 등록하기 </a>
+<a href="/member/{{member.id}}/edit">수정하기</a>
+<a href="/member/list">회원목록</a>
 
 {{>layout/footer}}

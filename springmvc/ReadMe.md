@@ -101,3 +101,49 @@
   - 스프링 부트 앱 구동 시점에 코드를 실행시킬 때 사용
   - @Component 애노테이션 선언으로 컴포넌트 스캔
   - 구동 시점에 run 메소드를 실행
+
+## PRG 패턴 (Post-Redirect-Get)
+- 웹 앱에서 사용자 상호작용을 다루는 디자인 패턴
+1. Post : HTTP POST 메서드로 서버에 양식을 제출
+2. 서버에서 로직 실행 : Post 요청을 받고 필요한 로직 수핼
+3. Redirect : HTTP 리 다이렉트 응답 생성 다른 페이지로 이동
+4. Get : HTTP Get 요청을 통해 결과 확인
+
+- 새로고침을 통한 중복 제출 방지
+- UX 개선
+
+## 생성자 주입
+- 생성자가 1개만 있을 경우 @Autowired 생략해도 주입이 가능한 편의성 제공
+- 롬복의 @RequiredArgsConstructor 를 사용하여 생성자 코드를 생략할 수 있다. (의존성 주입 필드에 private final 선언)
+
+## HTTP 상태코드
+- 1XX (정보) : 요청 수신
+- 2XX (성공) : 요청이 정상적으로 처리
+- 3XX (리다이렉션) : 요청을 완료하기 위해 추가행동이 필요
+- 4XX (클라이언트 요청 오류) : 요청이 잘못되어 서버 수행 불가
+- 5XX (서버 응답 오류) : 서버 내부 에러 발생하여 요청 수행 불가
+
+## HTTP 메서드
+- GET : 리소스 조회 (요청에 Body 없음, 응답에 Body 있음), 안전(리소스를 변경하지 않는다)
+- POST : 요청한 데이터 처리(생성)
+- PUT : 리소스를 대체(없으면 생성)
+- PATCH : 리소스의 부분 변경
+- DELETE : 리소스 삭제(요청에 Body 없음, 응답에 Body 있음)
+
+## REST API
+- REST(REpresentational State Transfer) : HTTP URL을 통해 서버의 자원(Resource)을 명시하고, 
+- HTTP메서드(GET, POST, PUT, DELETE)로 해당 자원을 CRUD(생성, 조회, 수정, 삭제)하는 것, 
+- API는 클라이언트가, 서버 자원을 요청할 수 있도록 서버 측에서 제공하는 인터페이스
+  - 리소스(자원) 지향, 상태 없음(Stateless), 
+  - 웹 개발 및 서비스에서 통신 단순화, 확장성 등으로 중요 부분 차지
+## REST 컨트롤러
+- REST API로 설계된 URL의 요청을 받아서 처리하는 컨트롤러
+- 뷰 대신에 텍스트나 JSON을 반환한다.
+- @RestController
+
+## ResponseEntity
+- REST 컨트롤러의 리턴 타입, REST API 응답을 위해 사용하는 클래스, 
+- HTTP 상태코드, 헤더, 바디 등을 실어보낼 수 있다.
+
+## HttpStatus
+- 상태코드를 관리하는 클래스, Enum 타입 200 => HttpStatus.OK
