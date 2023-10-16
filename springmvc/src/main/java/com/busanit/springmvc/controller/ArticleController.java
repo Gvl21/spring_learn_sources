@@ -39,7 +39,6 @@ public class ArticleController {
     public String createArticle(ArticleForm dto){
         // 폼 데이터를 DTO로 전달받아 확임
         log.info(dto.toString());
-
         // 1. DTO를 도메인 Entity로 변환
         Article article = dto.toEntity();
         // 2. Repository(DAO)로 Entity를 DB에 저장
