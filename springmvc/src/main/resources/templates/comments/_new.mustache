@@ -1,0 +1,64 @@
+<div class="card m-3" id="comments-new">
+    <div class="card-body">
+        <!--   댓글 작성 폼     -->
+        <form>
+            <!--    닉네임        -->
+            <div class="mb-3">
+                <label for="new-comment-nickname" class="form-label"
+                    >닉네임</label
+                >
+                <input
+                    type="text"
+                    class="form-control"
+                    id="new-comment-nickname"
+                    aria-describedby="emailHelp"
+                />
+            </div>
+            <!--    댓글 본문        -->
+            <div class="mb-3">
+                <label for="new-comment-body" class="form-label"
+                    >댓글 본문</label
+                >
+                <textarea
+                    type="text"
+                    class="form-control"
+                    id="new-comment-body"
+                >
+                </textarea>
+            </div>
+            <!--        숨긴 데이터 : 게시글 id              -->
+            <input
+                type="hidden"
+                id="new-comment-article-id"
+                value="{{ article.id }}"
+            />
+            <!--                    제출 버튼                           -->
+            <button
+                type="submit"
+                id="comment-create-btn"
+                class="btn btn-primary"
+            >
+                댓글 작성
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    {
+        // 댓글 생성 버튼 DOM 변수
+        const commentCreateBtn = document.getElementById('comment-create-btn');
+        // 이벤트 핸들러
+        const clickHandler = () => {
+            // console.log('클릭했습니다.');
+            // JSON 댓글 객체 (CommentDto 포맷) 생성
+            const comment = {
+                articleId: null,
+                nickname: null,
+                body: null,
+            };
+        };
+        // 이벤트 감지
+        commentCreateBtn.addEventListener('click', clickHandler);
+    }
+</script>

@@ -1,8 +1,10 @@
 package com.busanit.springmvc.controller;
 
 import com.busanit.springmvc.dto.ArticleForm;
+import com.busanit.springmvc.dto.CommentDto;
 import com.busanit.springmvc.entity.Article;
 import com.busanit.springmvc.repository.ArticleRepository;
+import com.busanit.springmvc.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor    //
 @Slf4j    // 로깅기능을 위한 애노테이션
 public class ArticleController {
+    private final CommentService commentService;
 
     // @Autowired  // 스프링부트에서 스프링 컨테이너에 의존성 주입 (필드 주입) + 가능하면 생성자를 통한 주입을 하는 게 좋다.
     private final ArticleRepository articleRepository;
@@ -29,13 +32,13 @@ public class ArticleController {
 //        this.articleRepository = articleRepository;
 //    }   // 스프링에서 생성자가 하나만 있을 때, @Autowired가 없어도 자동으로 DI를 한다.
 
-    @GetMapping("/article/new")
+    @GetMapping("/articles/new")
     public String newArticleForm(){
 //        Logger logger = LoggerFactory.getLogger(ArticleController.class);
         return "articles/new";
     }
     // CREATE
-    @PostMapping("/article/create")
+    @PostMapping("/articles/create")
     public String createArticle(ArticleForm dto){
         // 폼 데이터를 DTO로 전달받아 확임
         log.info(dto.toString());
@@ -49,14 +52,16 @@ public class ArticleController {
         return "redirect:/article/" + saved.getId();
     }
     //  READ
-    @GetMapping("article/{id}")
+    @GetMapping("articles/{id}")
     public String show(@PathVariable Long id, Model model){
         // URL 경로 상에 잇는 변수를 애노테이션으로 확인
 //        log.info("id : " + id);
         // 1. id 조회하여 데이터 가져오기
         Article article = articleRepository.findById(id).orElse(null);
+        List<CommentDto> comments = commentService.comments(id);
         // 2. 모델에 데이터를 등록하기
         model.addAttribute("article", article);
+        model.addAttribute("comments", comments);
         // 3. 뷰 페이지 View Resolver
         return "articles/show";
     }
@@ -72,7 +77,7 @@ public class ArticleController {
     }
 
     // UPDATE
-    @GetMapping("article/{id}/edit")
+    @GetMapping("articles/{id}/edit")
     public String edit(@PathVariable Long id, Model model){
         // 수정할 데이터 가져오기
         Article article = articleRepository.findById(id).orElse(null);
@@ -83,7 +88,7 @@ public class ArticleController {
     }
 
     // UPDATE
-    @PostMapping("article/{id}/update")
+    @PostMapping("articles/{id}/update")
     public String updateArticle(ArticleForm dto, @PathVariable Long id){
         log.info(dto.toString());
         // 1. dto를 엔티티로 변환
@@ -98,11 +103,11 @@ public class ArticleController {
         }
 
         // 3. 결과 페이지 리다이렉트
-        return "redirect:/article/" + id;
+        return "redirect:/articles/" + id;
     }
 
     // DELETE
-    @GetMapping("article/{id}/delete")
+    @GetMapping("articles/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes attributes){
         log.info("삭제요청" + id);
         // 1. 삭제할 대상 가져오기

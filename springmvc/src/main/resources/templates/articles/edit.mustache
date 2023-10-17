@@ -1,23 +1,24 @@
 {{>layout/header}}
 
 <!-- form tag에서 action : URL 연결주소로 폼 데이터를 보낸다.-->
-<!-- method : 폼에서 데이터를 보낼 때 일반적으로 post를 사용 -->
-<!-- form 태그 내부 input 등의 태그에 name 속성으로 데이터 이름 식별 -->
+<!-- method : 폼에서 데이터를 보낼 때 일반적으로 post를 사용-->
+<!-- form 태그 내부 input 등의 태그에 name 속성으로 데이터 이름 식별-->
 <form class="container" action="/articles/{{article.id}}/update" method="post">
     <div class="mb-3">
         <label class="form-label">제목</label>
-        <input class="form-control" type="text" name="title" value="{{article.title}}">
+        <input class="form-control" type="text" name="title"
+        value="{{article.title}}"
+        >
     </div>
 
     <div class="mb-3">
         <label class="form-label">내용</label>
-        <textarea class="form-control" rows="3" name="content" >{{article.content}}</textarea>
+        <textarea class="form-control" rows="3" name="content">{{article.content}}
+        </textarea>
     </div>
 
     <button type="submit" class="btn btn-success">수정하기</button>
-    <a href="/articles/{{article.id}}">
-        <button type="button" class="btn btn-secondary">뒤로가기</button>
-    </a>
+    <a href="/articles/{{article.id}}" class="btn btn-secondary">뒤로가기</a>
 
 </form>
 

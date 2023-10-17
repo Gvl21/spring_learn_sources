@@ -9,20 +9,23 @@
     </tr>
     </thead>
     <tbody>
-    <!--  객체 데이터를 사용하는 범위  -->
+    <!-- 객체 데이터를 사용하는 범위  -->
     {{#article}}
     <tr>
         <th>{{id}}</th>
         <td>{{title}}</td>
         <td>{{content}}</td>
-
     </tr>
     {{/article}}
-    <!--  객체 데이터를 사용하는 범위  -->
+    <!-- 객체 데이터를 사용하는 범위  -->
     </tbody>
 </table>
-<a href="/article/{{article.id}}/edit" class="btn btn-success">수정하기</a>
-<a href="/article/{{article.id}}/delete" class="btn btn-danger">삭제하기</a>
-<a href="\articles" class="btn btn-secondary">글 목록</a>
+
+<a href="/articles/{{article.id}}/edit" class="btn btn-secondary">수정하기</a>
+<a href="/articles/{{article.id}}/delete" class="btn btn-danger">삭제하기</a>
+<a href="/articles" class="btn btn-secondary">글 목록</a>
+
+<!-- 댓글 뷰 템플릿 삽입-->
+{{>comments/_comments}}
 
 {{>layout/footer}}

@@ -178,3 +178,29 @@
   4. Database Layer
      - 실제 데이터베이스가 존재하는 계층
      - H2, MySql, Oracle, Postgres..
+
+## 데이터 연관 관계
+1. 일대다 관계, 다대일 관계
+   - 일대다 관계 : 한 엔티티의 하나의 데이터가 다른 엔티티의 여러 데이터와 연관 될 때 @OneToMany
+   - 다대일 관계 : 한 엔티티의 여러 데이터가 다른 엔티티의 한 데이터와 연관 될 때 @ManyToOne, 연관관계의 주인이 다(많은 쪽)을 선택하는 경우가 일반적이다.
+2. 대표키(PK)와 외래키(FK)
+   - @Id
+   - @ManyToOne, @JoinColumn 외래키 필드 이름
+3. JpaRepository
+   - CrudRepository 상속받은 인터페이스로 JPA에 특화된 여러 기능을 제공
+4. 네이티브 쿼리
+   - 리파지터리에서 메서드로 쿼리를 작성해서 실행하는 것
+   1. @Query 어노테이션을 사용
+      - nativeQuery = true : 기존 SQL문 그대로 사용
+      - false 일 경우 JPQL(Java Persistence Query Language)
+   2. orm.xml (resources/META-INF/orm.xml)
+
+## REST API 레이어 아키텍쳐 흐름 정리
+- REST Controller <- (dto) -> Service -> Repository <- (entity) -> DB
+  - REST Controller : 요청, 응답, 뷰가 아니라 데이터를 반환, 서비스와 협업
+  - Service : 처리 흐름을 담당 @Transactional을 통해 예외발생시 롤백
+  - DTO : 사용자에게 보여줄 데이터를 담은 전송 객체 or 클라이언트로 받는 데이터 형식
+  - Entity : DB 조회하고 전달할 때, 리파지터리에서 매개변수로 사용
+  - Repository : DB에 명령을 보내고 응답받음. native Query, JQPL 등 SQL문 사용 가능
+- 생성 메서드 : createXXX(), 다른 데이터 타입을 매개변수로 받아, 해당 데이터 타입으로 생성, static 메서드
+- orElseThrow() : 옵셔널 객체(null 일 수도 있고, 아닐수도 있는 객체), 값이 존재하지 않으면 예외 발생

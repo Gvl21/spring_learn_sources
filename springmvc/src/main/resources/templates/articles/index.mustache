@@ -4,7 +4,6 @@
     {{msg}}
 {{/msg}}
 
-
 <table class="table">
     <thead>
     <tr>
@@ -14,18 +13,18 @@
     </tr>
     </thead>
     <tbody>
-    <!--  객체 데이터를 사용하는 범위  -->
+    <!-- 객체 데이터를 사용하는 범위 : 반복가능한 객체일 경우, 해당 부분을 반복 -->
     {{#articleList}}
         <tr>
             <th>{{id}}</th>
-            <td><a href="/articles/{{id}}"> {{title}}</a></td>
-            <td><a href="/articles/{{id}}"> {{content}}</a></td>
-
+            <td><a href="/articles/{{id}}">{{title}}</a></td>
+            <td>{{content}}</td>
         </tr>
     {{/articleList}}
-    <!--  객체 데이터를 사용하는 범위  -->
+    <!-- 객체 데이터를 사용하는 범위  -->
     </tbody>
 </table>
 
-<a href="/articles/new"> 새 글 작성하기 </a>
+<a href="/articles/new">새 글 쓰기</a>
+
 {{>layout/footer}}
