@@ -1,0 +1,25 @@
+{{>layout/header}}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">이메일</th>
+        <th scope="col">패스워드</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 객체 데이터를 사용하는 범위 : 반복가능한 객체일 경우, 해당 부분을 반복 -->
+    {{#memberList}}
+        <tr>
+            <th>{{id}}</th>
+            <td><a href="/members/{{id}}">{{email}}</a></td>
+            <td>{{password}}</td>
+        </tr>
+    {{/memberList}}
+    <!-- 객체 데이터를 사용하는 범위  -->
+    </tbody>
+</table>
+
+<a href="/members/new">회원가입</a>
+{{>layout/footer}}
