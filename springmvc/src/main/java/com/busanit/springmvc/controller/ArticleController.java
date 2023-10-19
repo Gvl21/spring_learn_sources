@@ -49,7 +49,7 @@ public class ArticleController {
         log.info(saved.toString());
         // 리다이렉트를 통해 새로운 주소 요청
         // "redirect:URL_주소
-        return "redirect:/article/" + saved.getId();
+        return "redirect:/articles/" + saved.getId();
     }
     //  READ
     @GetMapping("articles/{id}")

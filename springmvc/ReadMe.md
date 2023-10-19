@@ -204,3 +204,4 @@
   - Repository : DB에 명령을 보내고 응답받음. native Query, JQPL 등 SQL문 사용 가능
 - 생성 메서드 : createXXX(), 다른 데이터 타입을 매개변수로 받아, 해당 데이터 타입으로 생성, static 메서드
 - orElseThrow() : 옵셔널 객체(null 일 수도 있고, 아닐수도 있는 객체), 값이 존재하지 않으면 예외 발생
+

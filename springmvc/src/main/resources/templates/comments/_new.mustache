@@ -34,7 +34,7 @@
             />
             <!--                    제출 버튼                           -->
             <button
-                type="submit"
+                type="button"
                 id="comment-create-btn"
                 class="btn btn-primary"
             >
@@ -53,10 +53,30 @@
             // console.log('클릭했습니다.');
             // JSON 댓글 객체 (CommentDto 포맷) 생성
             const comment = {
-                articleId: null,
-                nickname: null,
-                body: null,
+                //  게시글 ID 데이터
+                articleId: document.getElementById('new-comment-article-id')
+                    .value,
+                //  닉네임 데이터
+                nickname: document.getElementById('new-comment-nickname').value,
+                //  본문 데이터
+                body: document.getElementById('new-comment-body').value,
             };
+            console.log(comment);
+            // API 통신 - 비동기 통신 fetch() APi Controller 호출
+            const url = `/api/articles/${comment.articleId}/comments`;
+            fetch(url, {
+                method: 'POST', // HTTP Post 요청
+                headers: {
+                    'Content-Type': 'application/json',
+                }, // 헤더정보, 본문타입 JSON
+                body: JSON.stringify(comment), // comment JSON 객체를 문자열로 반환
+            }).then((response) => {
+                const msg = response.ok // HTTP 응답코드에 따라 메세지 반환
+                    ? '성공적으로 댓글이 등록되었습니다.'
+                    : '등록 실패';
+                alert(msg);
+                window.location.reload(); // 페이지 새로고침
+            });
         };
         // 이벤트 감지
         commentCreateBtn.addEventListener('click', clickHandler);

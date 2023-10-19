@@ -3,6 +3,7 @@ package com.busanit.springmvc.service;
 import com.busanit.springmvc.dto.ArticleForm;
 import com.busanit.springmvc.entity.Article;
 import com.busanit.springmvc.repository.ArticleRepository;
+import com.busanit.springmvc.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,16 +13,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@RequiredArgsConstructor
 @Service        // 서비스 컴포넌트 선언
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
+    private final CommentService commentService;
 
-    @Autowired    // 서비스 객체 리파지토리 의존성 주입
-    public ArticleService(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
+//    @Autowired    // 서비스 객체 리파지토리 의존성 주입
+//    public ArticleService(ArticleRepository articleRepository) {
+//        this.articleRepository = articleRepository;
+//    }
+
 
     public Article update(Long id, ArticleForm dto) {
         // 1. DTO -> entity

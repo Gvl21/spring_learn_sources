@@ -68,4 +68,7 @@ public class CommentService {
         commentRepository.delete(target);
         return CommentDto.createCommentDto(target);
     }
+    public CommentDto deleteByArticleId(Long articleId){
+        return null;
+    }
 }
