@@ -59,4 +59,53 @@
 # Thymeleaf
 - 동적 뷰 템플릿
 - 서버 사이드 렌더링 SSR
-- 
+  - 백엔드 서버에서 HTML을 동적으로 렌더링
+- 네츄럴 템플릿
+  - 순수 HTML을 최대한 유지하는 특징
+  - 웹 브라우저에서 파일을 직접 열어도 내용 확인가능
+- 스프링 통합
+  - 스프링의 다양한 기능을 사용할 수 있게 통합 지원
+- 기본 문법
+  - ${...} : 변수 표현식
+  - *{...} : 선택 변수 표현식
+  - #{...} : 메세지 표현식
+  - @{...} : 링크 URL 표현식
+  - ~{...} : 조각(fragment) 표현식
+- XML 네임스페이스 사용
+  - `<html xmlns:th="http://www.thymeleaf.org">`
+  - th:text
+  - th:utext  특수문자 등 태그를 입력하고 싶을 때(이스케이프 문자)
+  - th:each : 반복문
+  - th:if : 조건문
+  - th:object : 폼 태그에서 스프링과 바인딩 될 도메인 객체
+  - th:field : 인풋 태그에서 스프링과 바인딩된 객체의 입력필드
+    - id, name, value 속성의 설정이 간편하게 진행됨.
+  - 리터럴 대체 : "|hello ${user.name}|"
+
+# Spring Security
+- 인증 Authentication
+  - 적합한 사용자인가?
+  - 사용자의 신원을 확인하는 과정(이름, 암호, 생체인식, 토큰)
+  - 로그인 자격증명 -> 검증 -> 인증
+- 인가 Authorization
+  - 적합한 권한을 가지고 있는가?
+  - 특정 자원에 대한 권한, 리소스 접근 권한 확인하는 과정
+- Spring MVC 흐름 with Security
+  1. Request(요청)
+  2. Spring Security (필터 체인) *추가됨 
+  3. Dispatcher Servlet (프론트 컨트롤러)
+  4. Controller (url 매핑이 맞는 컨트롤러)
+
+- Password Encoder
+  - 비밀번호를 암호화하여 DB에 저장
+
+- CSRF (Cross Site Request Forgery)
+  - 인터넷 사용자가 자신의 의지와 무관하게
+  - 공격자가 의도한 행위를 특정 웹사이트에 요청하게 만드는 공격
+  - 스프링 시큐리티에서 보안 토큰 사용하여 방어 
+    - Form 태그에서 Post 요청을 받게 되면, CSRF 필터 작동
+    - 적합한 CSRF token이 있어야, 다음단계로 진행가능
+    - 적법한 홈페이지 폼에서 요청이 왔다는 걸 확인
+- CORS
+  - 
+
