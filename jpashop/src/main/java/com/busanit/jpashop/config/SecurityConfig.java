@@ -12,6 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 @EnableWebSecurity  // 웹 보안
 @Configuration      // 설정 정보 컴포넌트 등록 선언
 @RequiredArgsConstructor
@@ -24,7 +27,7 @@ public class SecurityConfig {
 
 
 
-
+        // 로그인 과정
         http.formLogin(form ->
                         form
                         .loginPage("/members/login")            // 기본 로그인 페이지 URL을 설정
@@ -34,6 +37,7 @@ public class SecurityConfig {
                         .failureUrl("/members/login/error")     // 실패했을 때 보낼 URL
 
         );
+        // 로그아웃 과정
         http.logout(
                 logout-> logout
                         .logoutRequestMatcher(
@@ -42,22 +46,27 @@ public class SecurityConfig {
                         // 로그아웃이 성공한 경우 메인 페이지로 리다이렉트
                         .logoutSuccessUrl("/")
         );
-        // 인가
+
+        // 인가 과정
         http.authorizeHttpRequests(
                 author ->
                         // Ant 패턴 경로 요청
                         // ** : 모든 파일 및 경로에 대해
                         // 루트 경로는 모드가 접근 가능
                         author.requestMatchers(new AntPathRequestMatcher("/")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
+                                .requestMatchers(antMatcher("/css/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/members/**")).permitAll()
                                 .requestMatchers(
                                 new AntPathRequestMatcher("/admin/**")
                                 // admin/ 이후의 url은 ADMIN 역할만 접근가능
+                                        // hasAnyRole <- 중복 대상으로 권한 부여 가능(단일도 가능)
+                                        // hasRole <- 단일 대상으로 권한 부여 가능
                         ).hasAnyRole("ADMIN")
                                 // 그외 모든 요청은 인증되어야한다.
                                 .anyRequest().authenticated()
                 );
+
+
 
 
         // CSRF 토큰 검증 무효화
