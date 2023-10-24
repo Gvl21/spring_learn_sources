@@ -4,9 +4,30 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{layout/layout1}"
 >
+    <!-- 사용자 CSS 조각 -->
+    <th:block layout:fragment="css">
+        <style>
+            .fieldError {
+                color: red;
+            }
+        </style>
+    </th:block>
+    <!-- 사용자 스크립트 조각 -->
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+            $(document).ready(function () {
+                 let errorMessage = [[${errorMessage}]];
+                 if (errorMessage) {
+                     alert(errorMessage);
+                 }
+             });
+        </script>
+    </th:block>
+
     <div layout:fragment="content">
         <!-- 회원가입 폼 -->
         <form th:object="${memberDto}" method="post" action="/members/new">
+            <!-- 이름 입력 폼 -->
             <div class="form-group">
                 <label th:for="name">이름</label>
                 <input
@@ -15,16 +36,34 @@
                     th:field="*{name}"
                     placeholder="이름을 입력해주세요"
                 />
+                <!-- 유효성 검증 에러메시지 -->
+                <p
+                    th:if="${#fields.hasErrors('name')}"
+                    th:errors="*{name}"
+                    class="fieldError"
+                >
+                    에러메시지
+                </p>
             </div>
+            <!-- 이메일 입력 폼 -->
             <div class="form-group">
                 <label th:for="email">이메일</label>
                 <input
-                    type="text"
+                    type="email"
                     class="form-control"
                     th:field="*{email}"
                     placeholder="이메일을 입력해주세요"
                 />
+                <!-- 유효성 검증 에러메시지 -->
+                <p
+                    th:if="${#fields.hasErrors('email')}"
+                    th:errors="*{email}"
+                    class="fieldError"
+                >
+                    에러메시지
+                </p>
             </div>
+            <!-- 비밀번호 입력 폼 -->
             <div class="form-group">
                 <label th:for="password">비밀번호</label>
                 <input
@@ -33,7 +72,16 @@
                     th:field="*{password}"
                     placeholder="비밀번호를 입력해주세요"
                 />
+                <!-- 유효성 검증 에러메시지 -->
+                <p
+                    th:if="${#fields.hasErrors('password')}"
+                    th:errors="*{password}"
+                    class="fieldError"
+                >
+                    에러메시지
+                </p>
             </div>
+            <!-- 주소 입력 폼 -->
             <div class="form-group">
                 <label th:for="address">주소</label>
                 <input
@@ -42,9 +90,17 @@
                     th:field="*{address}"
                     placeholder="주소를 입력해주세요"
                 />
+                <!-- 유효성 검증 에러메시지 -->
+                <p
+                    th:if="${#fields.hasErrors('address')}"
+                    th:errors="*{address}"
+                    class="fieldError"
+                >
+                    에러메시지
+                </p>
             </div>
             <button type="submit" class="btn btn-primary">회원가입</button>
-            <!-- CSPF 토큰 -->
+            <!-- CSRF 토큰 -->
             <input
                 type="hidden"
                 th:name="${_csrf.parameterName}"

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    // 쿼리 메소드
+    // 쿼리 메소드d
     Member findByEmail(String email);
 }

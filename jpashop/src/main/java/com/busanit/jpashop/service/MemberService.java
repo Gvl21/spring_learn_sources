@@ -4,12 +4,16 @@ import com.busanit.jpashop.entity.Member;
 import com.busanit.jpashop.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
 @RequiredArgsConstructor    // 생성자 의존성 주입
-public class MemberService {
+public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
@@ -27,6 +31,21 @@ public class MemberService {
             // 예외 발생
             throw new IllegalStateException("가입된 회원입니다.");
         }
+    }
+    // 회원 서비스 계층에서 스프링 사용자 정보 구현
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException{
+        Member member = memberRepository.findByEmail(email);
+        // 이메일에 해당하는 사용자가 없을 경우 예외발생
+        if (member == null){
+            throw new UsernameNotFoundException(email);
+        }
+        // 스프링 시큐리티 사용자 객체를 반환
+        return User.builder()
+                .username(member.getEmail())
+                .password(member.getPassword())
+                .roles(member.getRole().toString())
+                .build();
     }
 
 }
