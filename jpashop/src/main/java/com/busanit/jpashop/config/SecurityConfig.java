@@ -54,8 +54,8 @@ public class SecurityConfig {
                         // ** : 모든 파일 및 경로에 대해
                         // 루트 경로는 모드가 접근 가능
                         author.requestMatchers(new AntPathRequestMatcher("/")).permitAll()
-                                .requestMatchers(antMatcher("/css/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/members/**")).permitAll()
+                                .requestMatchers(antMatcher("/css/**")).permitAll() // static import로 메서드 가져오기
+                                .requestMatchers(antMatcher("/members/**")).permitAll() // 위의 new ~~ 와 똑같다.
                                 .requestMatchers(
                                 new AntPathRequestMatcher("/admin/**")
                                 // admin/ 이후의 url은 ADMIN 역할만 접근가능
