@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity  // 웹 보안
 @Configuration      // 설정 정보 컴포넌트 등록 선언
@@ -32,6 +33,14 @@ public class SecurityConfig {
                         .passwordParameter("password")         // 로그인에 사용할 매개변수 username -> email
                         .failureUrl("/members/login/error")     // 실패했을 때 보낼 URL
 
+        );
+        http.logout(
+                logout-> logout
+                        .logoutRequestMatcher(
+                                // Ant 패턴 경로 문법 -> 해당 URL 접속시 로그아웃 됨
+                                new AntPathRequestMatcher("/members/logout"))
+                        // 로그아웃이 성공한 경우 메인 페이지로 리다이렉트
+                        .logoutSuccessUrl("/")
         );
 
 
