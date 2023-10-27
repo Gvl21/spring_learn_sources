@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter @Setter @ToString
-public class Member {
+public class Member extends BaseTimeEntity {
     @Id @Column(name = "member_id")
     @GeneratedValue
     private Long id;
@@ -30,7 +30,8 @@ public class Member {
     private Role role;
 
     // 생성 메서드 dto -> 엔티티
-    public static Member createMember(MemberDto memberDto, PasswordEncoder passwordEncoder) {
+    public static Member createMember(MemberDto memberDto,
+                                      PasswordEncoder passwordEncoder) {
         Member member = new Member();
 
         member.setName(memberDto.getName());
@@ -39,6 +40,7 @@ public class Member {
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(memberDto.getPassword());
         member.setPassword(encodedPassword);
+
         member.setRole(Role.USER);
 
         return member;

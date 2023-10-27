@@ -24,18 +24,14 @@ public class SecurityConfig {
     // http 요청에 대한 보안 설정
     @Bean       // 스프링 컨테이너에 등록
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-
-
         // 로그인 과정
         http.formLogin(form ->
                         form
                         .loginPage("/members/login")            // 기본 로그인 페이지 URL을 설정
-                        .defaultSuccessUrl("/")             // 로그인에 성공했을 때 URL
-                        .usernameParameter("email")         // 로그인에 사용할 매개변수 username -> email
+                        .defaultSuccessUrl("/")                 // 로그인에 성공했을 때 URL
+                        .usernameParameter("email")             // 로그인에 사용할 매개변수 username -> email
                         .passwordParameter("password")         // 로그인에 사용할 매개변수 username -> email
                         .failureUrl("/members/login/error")     // 실패했을 때 보낼 URL
-
         );
         // 로그아웃 과정
         http.logout(
