@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -26,7 +27,7 @@ public class ItemController {
    }
    @PostMapping("admin/item/new")
     public String itemNew(@Valid ItemFormDto itemFormDto, BindingResult bindingResult,
-                          @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList){
+                          @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) throws IOException {
        // 유효성 검증 : 통과하지 못한 경우 폼으로
        if(bindingResult.hasErrors()){
            return "item/itemForm";
