@@ -4,10 +4,23 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{layout/layout1}"
 >
+    <!-- 사용자 CSS 조각 -->
+    <th:block layout:fragment="css">
+        <style>
+            .fieldError {
+                color: red;
+            }
+        </style>
+    </th:block>
     <div layout:fragment="content">
         <h1>상품 등록 페이지</h1>
         <div class="form-group">
-            <form action="/admin/item/new" method="post" th:object="${itemFormDto}">
+            <form
+                action="/admin/item/new"
+                method="post"
+                th:object="${itemFormDto}"
+                enctype="multipart/form-data"
+            >
                 <input type="hidden" th:field="*{id}" />
                 <!-- 상품 등록 상태 -->
                 <select th:field="*{itemSellStatus}" class="custom-select">
@@ -16,6 +29,7 @@
                 </select>
                 <!-- 상품등록 인풋 그룹 -->
                 <div class="input-group mb-3">
+                    <!-- 상품명 -->
                     <div class="input-group-prepend">
                         <span class="input-group-text">상품명</span>
                     </div>
@@ -25,6 +39,14 @@
                         th:field="*{itemNm}"
                         placeholder="상품명을 입력해주세요."
                     />
+                    <!-- 유효성 검증 에러메시지 -->
+                    <p
+                        th:if="${#fields.hasErrors('itemNm')}"
+                        th:errors="*{itemNm}"
+                        class="fieldError"
+                    >
+                        에러메시지
+                    </p>
                     <div class="input-group-prepend">
                         <span class="input-group-text">상품가격</span>
                     </div>
@@ -34,6 +56,14 @@
                         th:field="*{price}"
                         placeholder="상품가격을 입력해주세요."
                     />
+                    <!-- 유효성 검증 에러메시지 -->
+                    <p
+                        th:if="${#fields.hasErrors('price')}"
+                        th:errors="*{price}"
+                        class="fieldError"
+                    >
+                        에러메시지
+                    </p>
                     <div class="input-group-prepend">
                         <span class="input-group-text">재고량</span>
                     </div>
@@ -43,6 +73,14 @@
                         placeholder="재고를 입력해주세요."
                         th:field="*{stockNumber}"
                     />
+                    <!-- 유효성 검증 에러메시지 -->
+                    <p
+                        th:if="${#fields.hasErrors('stockNumber')}"
+                        th:errors="*{stockNumber}"
+                        class="fieldError"
+                    >
+                        에러메시지
+                    </p>
                 </div>
 
                 <div class="input-group">
@@ -55,6 +93,11 @@
                         th:field="*{itemDetail}"
                     ></textarea>
                 </div>
+                <!-- 상품 이미지 파일 5ㄱㅐ -->
+
+                <div th:each="num: ${#numbers.sequence(1,5)}">
+                    <div class="form-group"><input type="file" name="itemImgFile"/></div>
+                </div>
                 <!-- CSRF 토큰 -->
                 <input
                     type="hidden"
@@ -62,7 +105,11 @@
                     th:value="${_csrf.token}"
                 />
                 <button type="submit" class="btn btn-primary">제출하기</button>
-                <button class="btn btn-secondary" onclick="location.href='/'">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="location.href='/'"
+                >
                     뒤로가기
                 </button>
             </form>
