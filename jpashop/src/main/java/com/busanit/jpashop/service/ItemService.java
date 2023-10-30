@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -65,5 +66,24 @@ public class ItemService {
         itemFormDto.setItemImgDtoList(itemImgDtoList);
 
         return itemFormDto;
+    }
+    public Long updateItem(ItemFormDto itemFormDto,
+                           List<MultipartFile> itemImgFileList){
+        // 상품 조회
+        Item item = itemRepository.findById(itemFormDto.getId()).orElseThrow(EntityNotFoundException::new);
+        // 변경 감지 기능을 사용 : 리포지터리에 저장하는 로직을 호출하지 않고,
+        // 영속 상태인 데이터를 변경하게 될 경우,
+        // 트랜잭션이 종료될 때, 변경 감지 기능이 작동
+        item.updateItem(itemFormDto);
+        
+        // 상품이미지 조회
+        List<Long> itemImgIds = itemFormDto.getItemImgIds();
+
+        for (int i = 0; i < itemImgFileList.size(); i++) {
+            // 상품 파일 서비스 계층에 수정 위임 : id, file
+            itemImgService.updateItemImg(itemImgIds.get(i), itemImgFileList.get(i));
+        }
+
+        return item.getId();
     }
 }
