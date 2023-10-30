@@ -31,8 +31,7 @@ public class ItemController {
 
     @PostMapping("/admin/item/new")
     public String itemNew(@Valid ItemFormDto itemFormDto,
-                          BindingResult bindingResult,
-                          @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList ) {
+                          BindingResult bindingResult,                          @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList ) {
         // 유효성 검증 : 통과하지 못한 경우 폼으로
         if (bindingResult.hasErrors()) {
             return "/item/itemForm";
@@ -46,14 +45,15 @@ public class ItemController {
     // 아이템 수정 Get 요청
     @GetMapping("/admin/item/{itemId}")
     public String itemDtl(@PathVariable("itemId") Long itemId, Model model) {
-
+        
         try {
-            // 아이템 서비스에 위밈하여 dto 리턴
+            // 아이템 서비스에 위임하여 dto 리턴
             ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
-            // 엔티티가 존재할 경우, dto를
+            // 엔티티가 존재할 경우, dto를 모델에 담아 뷰로 전달
             model.addAttribute("itemFormDto", itemFormDto);
             // 경로변수(itemId)에 해당하는 엔티티가 없을 경우
-        }   catch (EntityNotFoundException e){
+        } catch(EntityNotFoundException e) {
+            // 상품등록 페이지로 리다이렉트
             return "redirect:/admin/item/new";
         }
 

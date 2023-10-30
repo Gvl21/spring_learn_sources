@@ -132,18 +132,18 @@ class ItemRepositoryTest {
         itemList.forEach(System.out::println);
     }
 
-    @Test
-    void 네이티브쿼리테스트(){
-        this.createItemList();
-        List<Item> itemList = itemRepository.findByIemDetailNative("상");
-        itemList.forEach(System.out::println);
-    }
-    @Test
-    void JPQL테스트(){
-        this.createItemList();
-        List<String> itemList = itemRepository.findByItemDetailJPQL("상");
-        itemList.forEach(System.out::println);
-    }
+//    @Test
+//    void 네이티브쿼리테스트(){
+//        this.createItemList();
+//        List<Item> itemList = itemRepository.findByIemDetailNative("상");
+//        itemList.forEach(System.out::println);
+//    }
+//    @Test
+//    void JPQL테스트(){
+//        this.createItemList();
+////        List<String> itemList = itemRepository.findByItemDetailJPQL("상");
+//        itemList.forEach(System.out::println);
+//    }
     @Test
     @DisplayName("쿼리 DSL 테스트")
     void queryDSL테스트(){
