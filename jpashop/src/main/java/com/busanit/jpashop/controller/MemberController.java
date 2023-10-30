@@ -5,7 +5,6 @@ import com.busanit.jpashop.entity.Member;
 import com.busanit.jpashop.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,14 +13,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-@Slf4j
 @RequiredArgsConstructor
 public class MemberController {
+
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/members/new")
-    public String memberForm(Model model){
+    public String memberForm(Model model) {
         model.addAttribute("memberDto",new MemberDto());
         return "member/memberForm";
     }
@@ -42,24 +41,26 @@ public class MemberController {
             memberService.saveMember(member);
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            log.info(e.getMessage());
             return "member/memberForm";
         }
         // 리다이렉트
         return "redirect:/";
-    }
+}
+
     @GetMapping("/members/login")
-    public String loginMember(){
+    public String loginMember() {
         return "/member/memberLoginForm";
     }
 
     @GetMapping("/members/login/error")
-    public String loginError(Model model){
-        model.addAttribute("loginErrorMsg", "아이디와 비밀번호를 확인해 주세요");
+    public String loginError(Model model) {
+        model.addAttribute("loginErrorMsg", "아이디와 비밀번호를 확인해주세요.");
         return "/member/memberLoginForm";
     }
+
+
     @GetMapping("/")
-    public String main(){
+    public String main() {
         return "main";
     }
 }

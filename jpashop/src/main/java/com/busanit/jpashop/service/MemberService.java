@@ -32,14 +32,18 @@ public class MemberService implements UserDetailsService {
             throw new IllegalStateException("가입된 회원입니다.");
         }
     }
-    // 회원 서비스 계층에서 스프링 사용자 정보 구현
+
+
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException{
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        // DB에서 회원 정보 조회 (e-mail)
         Member member = memberRepository.findByEmail(email);
+
         // 이메일에 해당하는 사용자가 없을 경우 예외발생
-        if (member == null){
+        if (member == null) {
             throw new UsernameNotFoundException(email);
         }
+
         // 스프링 시큐리티 사용자 객체를 반환
         return User.builder()
                 .username(member.getEmail())
@@ -47,5 +51,4 @@ public class MemberService implements UserDetailsService {
                 .roles(member.getRole().toString())
                 .build();
     }
-
 }

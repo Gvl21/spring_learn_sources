@@ -29,6 +29,7 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+
     // 생성 메서드 dto -> 엔티티
     public static Member createMember(MemberDto memberDto,
                                       PasswordEncoder passwordEncoder) {

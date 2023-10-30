@@ -32,7 +32,7 @@ public class QMember extends EntityPathBase<Member> {
     public final StringPath password = createString("password");
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> regtime = _super.regtime;
+    public final DateTimePath<java.time.LocalDateTime> regTime = _super.regTime;
 
     public final EnumPath<com.busanit.jpashop.constant.Role> role = createEnum("role", com.busanit.jpashop.constant.Role.class);
 

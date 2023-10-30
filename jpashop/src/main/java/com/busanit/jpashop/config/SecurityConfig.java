@@ -4,7 +4,6 @@ import com.busanit.jpashop.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,56 +11,62 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @EnableWebSecurity  // 웹 보안
 @Configuration      // 설정 정보 컴포넌트 등록 선언
 @RequiredArgsConstructor
 public class SecurityConfig {
-    // 의존성 주입
+
+    // 스프링 컨테이너 의존성 주입
     private final MemberService memberService;
+    
     // http 요청에 대한 보안 설정
-    @Bean       // 스프링 컨테이너에 등록
+    @Bean       // 스프링 컨테이너 등록
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // 로그인 과정
-        http.formLogin(form ->
-                        form
-                        .loginPage("/members/login")            // 기본 로그인 페이지 URL을 설정
-                        .defaultSuccessUrl("/")                 // 로그인에 성공했을 때 URL
-                        .usernameParameter("email")             // 로그인에 사용할 매개변수 username -> email
-                        .passwordParameter("password")         // 로그인에 사용할 매개변수 username -> email
-                        .failureUrl("/members/login/error")     // 실패했을 때 보낼 URL
+
+        // 로그인 관련 설정
+        http.formLogin(
+                form -> form
+                        .loginPage("/members/login")  // 기본 로그인 페이지 URL을 설정
+                        .defaultSuccessUrl("/")      // 로그인에 성공했을 때 URL
+                        .usernameParameter("email")  // 로그인에 사용할 매개변수 username -> email
+                        .failureUrl("/members/login/error") // 실패했을 때 보낼 URL
         );
-        // 로그아웃 과정
+
+        // 로그아웃 관련 설정
         http.logout(
-                logout-> logout
+                logout -> logout
                         .logoutRequestMatcher(
-                                // Ant 패턴 경로 문법 -> 해당 URL 접속시 로그아웃 됨
-                                new AntPathRequestMatcher("/members/logout"))
+                                // Ant 패턴 경로 문법 -> 해당 URL 접속 시 로그아웃됨
+                                antMatcher("/members/logout"))
                         // 로그아웃이 성공한 경우 메인 페이지로 리다이렉트
                         .logoutSuccessUrl("/")
         );
 
-        // 인가 과정
+        // 인가 (authorize)
         http.authorizeHttpRequests(
-                author ->
-                        // Ant 패턴 경로 요청
+                authorize -> authorize
+                        // Ant 패턴 경로 요청에 대한 매칭 수행
                         // ** : 모든 파일 및 경로에 대해
-                        // 루트 경로는 모드가 접근 가능
-                        author.requestMatchers(new AntPathRequestMatcher("/")).permitAll()
-                                .requestMatchers(antMatcher("/css/**")).permitAll() // static import로 메서드 가져오기
-                                .requestMatchers(antMatcher("/members/**")).permitAll() // 위의 new ~~ 와 똑같다.
-                                .requestMatchers(
-                                new AntPathRequestMatcher("/admin/**")
-                                // admin/ 이후의 url은 ADMIN 역할만 접근가능
-                                        // hasAnyRole <- 중복 대상으로 권한 부여 가능(단일도 가능)
-                                        // hasRole <- 단일 대상으로 권한 부여 가능
-                        ).hasAnyRole("ADMIN")
-                                // 그외 모든 요청은 인증되어야한다.
-                                .anyRequest().authenticated()
+                        // 루트 경로는 모두가 접근 가능
+                        .requestMatchers(antMatcher("/"))
+                        .permitAll()
+                        // 정적 파일 css, js, image 등은 모두 접근 가능
+                        .requestMatchers(
+                                antMatcher("/css/**"))
+                        .permitAll()
+                        // 로그인, 로그아웃, 회원가입 페이지는 모두 접근 가능
+                        .requestMatchers(
+                                antMatcher("/members/**"))
+                        .permitAll()
+                        // /admin/ 이후의 url은 ADMIN 역할만 접근 가능
+                        .requestMatchers(
+                                antMatcher("/admin/**"))
+                        .hasAnyRole("ADMIN")
+                        // 그 외 모든 요청은 인증되어야 한다.
+                        .anyRequest().authenticated()
                 );
-
 
 
 
@@ -69,9 +74,10 @@ public class SecurityConfig {
         // http.csrf().disable();
         return http.build();
     }
+
     // 해시 함수를 이용한 비밀번호 암호화
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
