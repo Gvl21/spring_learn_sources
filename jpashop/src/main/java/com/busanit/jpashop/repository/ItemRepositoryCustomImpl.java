@@ -31,7 +31,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
         // Qitem item = new Qitem("item"); => Qitem.item => 정적 임포트를 통해 => item
         List<Item> itemList = queryFactory
                 .selectFrom(item)
-                .where(regDateAfter(itemSearchDto.getSearchDataType()),             // 1. 등록일 기준
+                .where(regDateAfter(itemSearchDto.getSearchDateType()),             // 1. 등록일 기준
                         searchSellStatusEq(itemSearchDto.getSearchSellStatus()),    // 2. 상품상태 조건
                         searchByLike(itemSearchDto.getSearchBy(), itemSearchDto.getSearchQuery()))  // 3. 검색어 질의
                 .orderBy(item.id.desc())        // 최신순으로 내림차순 설정
@@ -42,7 +42,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
         Long total = queryFactory
                 .select(item.count())
                 .from(item)
-                .where(regDateAfter(itemSearchDto.getSearchDataType()),             // 1. 등록일 기준
+                .where(regDateAfter(itemSearchDto.getSearchDateType()),             // 1. 등록일 기준
                         searchSellStatusEq(itemSearchDto.getSearchSellStatus()),    // 2. 상품상태 조건
                         searchByLike(itemSearchDto.getSearchBy(), itemSearchDto.getSearchQuery()))  // 3. 검색어 질의
                 .fetchOne();
@@ -70,18 +70,18 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
 
     
     // 등록일 조건절을 만들어주는 메서드
-    private Predicate regDateAfter(String searchDataType) {
+    private Predicate regDateAfter(String searchDateType) {
         LocalDateTime dateTime = LocalDateTime.now();
         // 만약 날짜 타입이 전체 혹은 비어있다면
-        if (StringUtils.equals("all", searchDataType) || searchDataType == null) {    // "all".equals(searchDataType)
+        if (StringUtils.equals("all", searchDateType) || searchDateType == null) {    // "all".equals(searchDateType)
             return null;         // null을 리턴하면 where조건을 생략한다.
-        } else if(StringUtils.equals("1d", searchDataType)){
+        } else if(StringUtils.equals("1d", searchDateType)){
             dateTime = dateTime.minusDays(1);
-        } else if(StringUtils.equals("1w", searchDataType)){
+        } else if(StringUtils.equals("1w", searchDateType)){
             dateTime = dateTime.minusWeeks(1);
-        } else if(StringUtils.equals("1m", searchDataType)){
+        } else if(StringUtils.equals("1m", searchDateType)){
             dateTime = dateTime.minusMonths(1);
-        } else if(StringUtils.equals("6m", searchDataType)){
+        } else if(StringUtils.equals("6m", searchDateType)){
             dateTime = dateTime.minusMonths(6);
         } return item.regTime.after(dateTime);
     }
