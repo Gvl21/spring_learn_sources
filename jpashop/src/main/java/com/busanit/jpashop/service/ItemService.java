@@ -3,6 +3,7 @@ package com.busanit.jpashop.service;
 import com.busanit.jpashop.dto.ItemFormDto;
 import com.busanit.jpashop.dto.ItemImgDto;
 import com.busanit.jpashop.dto.ItemSearchDto;
+import com.busanit.jpashop.dto.MainItemDto;
 import com.busanit.jpashop.entity.Item;
 import com.busanit.jpashop.entity.ItemImg;
 import com.busanit.jpashop.repository.ItemImgRepository;
@@ -17,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -70,18 +70,19 @@ public class ItemService {
 
         return itemFormDto;
     }
-    public Long updateItem(ItemFormDto itemFormDto,
-                           List<MultipartFile> itemImgFileList){
+
+
+    public Long updateItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) {
         // 상품 조회
         Item item = itemRepository.findById(itemFormDto.getId()).orElseThrow(EntityNotFoundException::new);
-        // 변경 감지 기능을 사용 : 리포지터리에 저장하는 로직을 호출하지 않고,
+        // 변경 감지 기능을 사용 :
+        // 리포지터리에 저장하는 로직을 호출하지 않고,
         // 영속 상태인 데이터를 변경하게 될 경우,
         // 트랜잭션이 종료될 때, 변경 감지 기능이 작동
         item.updateItem(itemFormDto);
-        
-        // 상품이미지 조회
-        List<Long> itemImgIds = itemFormDto.getItemImgIds();
 
+        // 상품 이미지 조회
+        List<Long> itemImgIds = itemFormDto.getItemImgIds();
         for (int i = 0; i < itemImgFileList.size(); i++) {
             // 상품 파일 서비스 계층에 수정 위임 : id, file
             itemImgService.updateItemImg(itemImgIds.get(i), itemImgFileList.get(i));
@@ -90,7 +91,6 @@ public class ItemService {
         return item.getId();
     }
 
-
     public List<Item> getItemList() {
         List<Item> all = itemRepository.findAll();
         return all;
@@ -98,5 +98,9 @@ public class ItemService {
 
     public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
         return itemRepository.getAdminItemPage(itemSearchDto, pageable);
+    }
+
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        return itemRepository.getMainItemPage(itemSearchDto, pageable);
     }
 }

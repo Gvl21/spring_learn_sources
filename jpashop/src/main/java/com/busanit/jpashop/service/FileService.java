@@ -37,8 +37,11 @@ public class FileService {
         return savedFileName;
     }
 
+    // 전달받은 파일 삭제
     public void deleteFile(String filePath) {
         File file = new File(filePath);
-        if(file.exists()) file.delete();
+        if (file.exists()) {
+            file.delete();
+        }
     }
 }

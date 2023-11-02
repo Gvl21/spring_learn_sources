@@ -1,135 +1,156 @@
 <!DOCTYPE html>
 <html
-    xmlns:th="http://www.thymeleaf.org"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{layout/layout1}"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout1}"
 >
-    <!-- 사용자 JS 조각 -->
-    <th:block layout:fragment="script">
-        <script th:inline="javascript">
-            // 렌더링 DOM요소 준비마치면 실행
-            document.addEventListener('DOMContentLoaded', () => {
-                const searchBtn = document.getElementById('searchBtn');
-                searchBtn.addEventListener('click', (e) => {
-                    // 폼 태그 기본 액션 막고, 질의어 첫 페이지로 이동
-                    e.preventDefault();
-                    linkPage(0);
-                });
-            });
-            // 쿼리 파라미터로 링크 요청
-            function linkPage(page) {
-                const searchDateType =
-                    document.getElementById('searchDateType').value;
-                const searchSellStatus =
-                    document.getElementById('searchSellStatus').value;
-                const searchBy = document.getElementById('searchBy').value;
-                const searchQuery =
-                    document.getElementById('searchQuery').value;
+  <!-- 사용자 JS 조각 -->
+  <th:block layout:fragment="script">
+    <script th:inline="javascript">
+      // 렌더링 DOM요소 준비마치면 실행
+      document.addEventListener('DOMContentLoaded', () => {
+        const searchBtn = document.getElementById('searchBtn');
+        searchBtn.addEventListener('click', (event) => {
+          // 폼 태그 기본 액션 막고, 질의어 첫 페이지로 이동
+          event.preventDefault;
+          linkPage(0);
+        });
+      });
 
-                const path = '/admin/items/';
-                const query = `?searchDateType=${searchDateType}&searchSellStatus=${searchSellStatus}&searchBy=${searchBy}&searchQuery=${searchQuery}`;
+      // 쿼리 파라미터로 링크 요청
+      function linkPage(page) {
+        // 데이터 가져오기
+        const searchDateType = document.getElementById('searchDateType').value;
+        const searchSellStatus =
+          document.getElementById('searchSellStatus').value;
+        const searchBy = document.getElementById('searchBy').value;
+        const searchQuery = document.getElementById('searchQuery').value;
 
-                // 링크로 이동하기
-                location.href = path + page + query;
-            }
+        const path = '/admin/items/';
+        const query = `?searchDateType=${searchDateType}&searchSellStatus=${searchSellStatus}&searchBy=${searchBy}createdBy&searchQuery=${searchQuery}`;
+        // 링크로 이동하기
+        location.href = path + page + query;
+      }
+      // Jquery $(document).ready(function () {});
+    </script>
+  </th:block>
 
-            // Jquery $(document).ready(function () {})
-        </script>
-    </th:block>
-    <div layout:fragment="content">
-        <table class="table">
-            <thead>
-                <tr>
-                    <td>아이디</td>
-                    <td>상품명</td>
-                    <td>상태</td>
-                    <td>등록자</td>
-                    <td>등록일</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="item, status : ${items}">
-                    <td th:text="${item.id}"></td>
-                    <td>
-                        <a
-                            th:href="@{/admin/item/{itemId}(itemId=${item.id})}"
-                            th:text="${item.itemNm}"
-                        ></a>
-                    </td>
-                    <td th:text="${item.itemSellStatus}"></td>
-                    <td th:text="${item.createdBy}"></td>
-                    <td th:text="${item.regTime}"></td>
-                </tr>
-            </tbody>
-        </table>
-        <!-- 페이지 네이션 -->
-        <nav
-            aria-label="Page navigation example"
-            class="form-inline justify-content-center"
+  <!-- 사용자 CSS 조각 -->
+  <th:block layout:fragment="css">
+    <style>
+      select {
+        margin-right: 0.5rem;
+      }
+    </style>
+  </th:block>
+
+  <div layout:fragment="content">
+    <!-- 데이터 -->
+    <table class="table">
+      <thead>
+        <tr>
+          <td>아이디</td>
+          <td>상품명</td>
+          <td>상태</td>
+          <td>등록자</td>
+          <td>등록일</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="item, status: ${items}">
+          <td th:text="${item.id}"></td>
+          <td>
+            <a
+              th:href="@{/admin/item/{itemId}(itemId=${item.id})}"
+              th:text="${item.itemNm}"
+            ></a>
+          </td>
+          <td th:text="${item.itemSellStatus}"></td>
+          <td th:text="${item.createdBy}"></td>
+          <td th:text="${item.regTime}"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 페이지네이션 -->
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <!-- 이전 -->
+        <li class="page-item">
+          <a
+            class="page-link"
+            th:unless="${items.first}"
+            th:onclick="'linkPage(' + ${items.number-1} + ')'"
+            >Previous</a
+          >
+        </li>
+
+        <!-- 페이지 수만큼 -->
+        <li
+          class="page-item"
+          th:each="page : ${#numbers.sequence(start, end)}"
+          th:classappend="${items.number == page-1} ? 'active' : '' "
         >
-            <ul class="pagination">
-                <!-- 이전 -->
-                <li class="page-item">
-                    <a
-                        class="page-link"
-                        th:if="${not items.first}"
-                        th:onclick="'linkPage(' + ${items.number-1} + ')'"
-                        >이전</a
-                    >
-                </li>
-                <!-- 페이지 수만큼 -->
-                <li
-                    class="page-item"
-                    th:each="page : ${#numbers.sequence(start, end)}"
-                    th:classappend="${items.number == page-1} ? 'active' : ''"
-                >
-                    <a
-                        class="page-link"
-                        th:onclick="'linkPage(' + ${page-1} + ')'"
-                        th:text="${page}"
-                    ></a>
-                </li>
-                <!-- 다음 -->
-                <li class="page-item">
-                    <a
-                        class="page-link"
-                        th:if="${not items.last}"
-                        th:onclick="'linkPage(' + ${items.number+1} + ')'"
-                        >다음</a
-                    >
-                </li>
-            </ul>
-        </nav>
-        <!-- 쿼리 (질의,검색) -->
-        <form
-            th:action="@{'/admin/items/' + ${items.number}}"
-            th:object="${itemSearchDto}"
-            method="get"
+          <a
+            class="page-link"
+            th:onclick="'linkPage(' + ${page-1} + ')'"
+            th:text="${page}"
+          ></a>
+        </li>
+
+        <!-- 다음 -->
+        <li class="page-item">
+          <a
+            class="page-link"
+            th:unless="${items.last}"
+            th:onclick="'linkPage(' + ${items.number+1} + ')'"
+            >Next</a
+          >
+        </li>
+      </ul>
+    </nav>
+
+    <!-- 쿼리 (질의, 검색) -->
+    <form
+      th:action="@{'/admin/items/'+ ${items.number}}"
+      th:object="${itemSearchDto}"
+      method="get"
+    >
+      <div class="form-inline justify-content-center">
+        <select
+          name="searchDateType"
+          id="searchDateType"
+          th:field="*{searchDateType}"
         >
-            <div class="form-inline justify-content-center">
-                <select th:field="*{searchDateType}" id="searchDateType">
-                    <option value="all">전체기간</option>
-                    <option value="1d">1일</option>
-                    <option value="1w">1주</option>
-                    <option value="1m">1달</option>
-                    <option value="6m">6개월</option>
-                </select>
-                <select th:field="*{searchSellStatus}" id="searchSellStatus">
-                    <option value="">판매상태(전체)</option>
-                    <option value="SELL">판매</option>
-                    <option value="SOLD_OUT">품절</option>
-                </select>
-                <select th:field="*{searchBy}" id="searchBy">
-                    <option value="itemNm">상품명</option>
-                    <option value="createdBy">등록자</option>
-                </select>
-                <input
-                    type="text"
-                    th:field="*{searchQuery}"
-                    placeholder="검색어를 입력해주세요"
-                />
-                <button id="searchBtn" class="btn btn-primary">검색</button>
-            </div>
-        </form>
-    </div>
+          <option value="all">전체기간</option>
+          <option value="1d">1일</option>
+          <option value="1w">1주</option>
+          <option value="1m">1달</option>
+          <option value="6m">6개월</option>
+        </select>
+        <select
+          name="searchSellStatus"
+          id="searchSellStatus"
+          th:field="*{searchSellStatus}"
+        >
+          <option value="">판매상태(전체)</option>
+          <option value="SELL">판매</option>
+          <option value="SOLD_OUT">품절</option>
+        </select>
+        <select name="searchBy" id="searchBy" th:field="*{searchBy}">
+          <option value="itemNm">상품명</option>
+          <option value="createdBy">등록자</option>
+        </select>
+        <input
+          type="text"
+          th:field="*{searchQuery}"
+          name="searchQuery"
+          placeholder="검색어를 입력해주세요."
+        />
+        <button id="serachBtn" type="submit" class="btn btn-primary">
+          검색
+        </button>
+      </div>
+    </form>
+  </div>
 </html>

@@ -17,7 +17,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="itemDto, status:${itemDtoList}">
+            <tr th:each="itemDto, status: ${itemDtoList}">
                 <td th:text="${status.index}">0</td>
                 <td th:text="${itemDto.itemNm}">기본상품명</td>
                 <td th:text="${itemDto.itemDetail}">기본정보</td>
