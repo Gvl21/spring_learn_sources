@@ -57,7 +57,7 @@ public class ItemController {
 
     // 아이템 수정 Get 요청
     @GetMapping("/admin/item/{itemId}")
-    public String itemDtl(@PathVariable("itemId") Long itemId, Model model) {
+    public String adminItemDtl(@PathVariable("itemId") Long itemId, Model model) {
         
         try {
             // 아이템 서비스에 위임하여 dto 리턴
@@ -118,6 +118,14 @@ public class ItemController {
 
         return "item/itemMng";
     }
+    // 상세페이지
+    @GetMapping(value = "/item/{itemId}")
+    public String itemDtl(Model model, @PathVariable Long itemId){
+        ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
+        model.addAttribute("item",itemFormDto);
+        return "item/itemDtl";
+    }
+
 
 
 
