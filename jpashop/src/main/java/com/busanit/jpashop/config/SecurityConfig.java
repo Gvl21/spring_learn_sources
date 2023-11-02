@@ -65,9 +65,6 @@ public class SecurityConfig {
                         // 그 외 모든 요청은 인증되어야 한다.
                         .anyRequest().authenticated()
                 );
-
-
-
         // CSRF 토큰 검증 무효화
         // http.csrf().disable();
         return http.build();
