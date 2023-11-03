@@ -62,6 +62,8 @@
                         } else if (response.status === 401) {
                             alert('로그인 후 이용해주세요.');
                             location.href = '/members/login';
+                        } else {
+                            response.text().then((msg) => alert(msg));
                         }
                     })
                     .catch((error) => {
