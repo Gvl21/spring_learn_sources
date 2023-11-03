@@ -21,6 +21,19 @@ public class CartItem extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
-
     private int count;      // 장바구니에 담을 같은 상품 개수
+
+    // 장바구니 상품 생성
+    public static CartItem createItem(Cart cart, Item item, int count){
+        CartItem cartItem = new CartItem();
+        cartItem.setCart(cart);
+        cartItem.setItem(item);
+        cartItem.setCount(count);
+        return cartItem;
+    }
+
+    // 장바구니 수량 증가 메서드
+    public void addCount(int count){
+        this.count += count;
+    }
 }
