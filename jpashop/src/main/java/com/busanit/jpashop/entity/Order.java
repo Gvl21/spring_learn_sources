@@ -73,5 +73,16 @@ public class Order extends BaseEntity {
         }
         return totalPrice;
     }
+
+    public void cancelOrder() {
+        // 주문상태 => 주문취소로 변경
+        this.orderStatus = OrderStatus.CANCEL;
+        // 모든 주문 상품의 재고를 원상 복귀
+        for (OrderItem orderItem : orderItems) {
+            orderItem.cancel();
+            // 엔티티로 재고 수량 변경 로직을 이전
+//             orderItem.getItem().setStockNumber(orderItem.getCount() + orderItem.getItem().getStockNumber());
+        }
+    }
 }
 

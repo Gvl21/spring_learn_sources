@@ -72,4 +72,10 @@ public class OrderService {
         // 5. 페이지 객체 리턴
         return new PageImpl<>(orderHistDtoList, pageable, totalCount);
     }
+
+    public void cancelOrder(Long orderId) {
+        // 주문 정보를 영속성 컨텍스트에 가져오기 : 변경 감지
+        Order order = orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
+        order.cancelOrder();
+    }
 }

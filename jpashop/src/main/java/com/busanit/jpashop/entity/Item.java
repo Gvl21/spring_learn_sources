@@ -42,12 +42,18 @@ public class Item extends BaseEntity {
         this.itemSellStatus = itemFormDto.getItemSellStatus();
     }
 
+    // 주문 발생시 재고 감소 메소드
     public void removeStock(int count) {
 
         int rest = this.stockNumber- count;
         // 개수 부족시 예외발생
         if (rest < 0) throw new OutOfStockException("상품의 재고가 부족합니다.");
         this.stockNumber = rest;
+    }
+    // 주문 취소시 재고 증가 메소드
+    public void addStock(int count){
+        this.stockNumber += count;
+
     }
 
     // Auditing 추가로 삭제

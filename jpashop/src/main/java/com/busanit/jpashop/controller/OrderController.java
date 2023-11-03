@@ -76,4 +76,14 @@ public class OrderController {
         return "order/orderHist";
     }
 
+    // 주문 취소
+    @PostMapping(value = "/order/{orderId}/cancel")
+    @ResponseBody
+    public ResponseEntity cancelOrder(@PathVariable("orderId") Long orderId){
+        // 주문 취소 로직 호출
+        orderService.cancelOrder(orderId);
+        return ResponseEntity.status(HttpStatus.OK).body(orderId);
+
+    }
+
 }
