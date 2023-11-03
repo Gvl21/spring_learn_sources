@@ -18,8 +18,7 @@ public class CartController {
     @ResponseBody
     public ResponseEntity addCart(){
         // 예외처리
-        cartService.addCart();
-
+//        cartService.addCart();
 
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }

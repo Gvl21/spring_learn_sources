@@ -37,7 +37,8 @@ public class ItemController {
 
     @PostMapping("/admin/item/new")
     public String itemNew(@Valid ItemFormDto itemFormDto,
-                          BindingResult bindingResult,                          @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList, Model model ) {
+                          BindingResult bindingResult,
+                          @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList, Model model ) {
         // 유효성 검증 : 통과하지 못한 경우 폼으로
         if (bindingResult.hasErrors()) {
             return "/item/itemForm";
