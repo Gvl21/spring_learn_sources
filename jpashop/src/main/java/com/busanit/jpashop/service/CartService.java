@@ -14,6 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,5 +78,21 @@ public class CartService {
         // cartItem.setCount(count);
         // 변경로직을 엔티티에 위임
         cartItem.updateCount(count);
+    }
+
+    // 유효성 검사 (로그인회원 == DB회원)
+    public boolean validateCartItem(Long cartItemId, String email){
+        // 현재 로그인한 회원
+        Member member = memberRepository.findByEmail(email);
+        CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(EntityNotFoundException::new);
+
+        // 장바구니에 매칭된 회원 정보
+        Member cartMember = cartItem.getCart().getMember();
+        // 로그인한 회원 정보와 DB의 회원정보가 다를 경우 false 리턴
+        if (StringUtils.equals(member.getEmail(), cartMember.getEmail())) return true;
+//        if (member.getEmail().equals(cartMember.getEmail())) return true; 위와 동일
+        else return false;
+
+
     }
 }
