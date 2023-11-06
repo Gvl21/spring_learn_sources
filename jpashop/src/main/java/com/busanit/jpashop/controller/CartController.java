@@ -73,7 +73,7 @@ public class CartController {
         // 예외처리
         if(count<=0){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("최소 1개 이상 담아주세요");
-        } else if (cartService.validateCartItem(cartItemId, principal.getName())) {
+        } else if (!cartService.validateCartItem(cartItemId, principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
         }
 
@@ -83,7 +83,17 @@ public class CartController {
     }
 
     // DELETE : 장바구니에서 제거
-
+    @DeleteMapping("/cartItem/{cartItemId}")
+    @ResponseBody
+    public ResponseEntity deleteCartItem(@PathVariable("cartItemId") Long cartItemId,
+                                         Principal principal){
+        // 유효성 검증 예외처리
+        if (!cartService.validateCartItem(cartItemId, principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
+        }
+        cartService.deleteCartItem(cartItemId);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
     // CREATE ALL : 장바구니에 담긴 상품 한꺼번에 주문
 
 }
