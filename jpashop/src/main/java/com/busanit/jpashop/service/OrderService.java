@@ -78,4 +78,20 @@ public class OrderService {
         Order order = orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
         order.cancelOrder();
     }
+
+    public Long orders(List<OrderDto> orderDtoList, String email) {
+        List<OrderItem> orderItemList = new ArrayList<>();
+        for (OrderDto orderDto : orderDtoList) {
+            // 상품 조회
+            Item item = itemRepository.findById(orderDto.getItemId()).orElseThrow(NullPointerException::new);
+            OrderItem orderItem = OrderItem.createOrderItem(item, orderDto.getCount());
+            orderItemList.add(orderItem);
+        }
+        // 회원 정보 조회
+        Member member = memberRepository.findByEmail(email);
+        // 주문 엔티티 생성
+        Order order = Order.CreateOrder(member, orderItemList);
+        orderRepository.save(order);
+        return order.getId();
+    }
 }

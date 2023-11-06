@@ -2,6 +2,7 @@ package com.busanit.jpashop.controller;
 
 import com.busanit.jpashop.dto.CartDetailDto;
 import com.busanit.jpashop.dto.CartItemDto;
+import com.busanit.jpashop.dto.CartOrderDto;
 import com.busanit.jpashop.service.CartService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,10 +39,7 @@ public class CartController {
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message.toString());
         }
-
-
         String email = principal.getName();
-
         Long cartItemId;
         try {
             // 서비스 위임
@@ -87,13 +85,26 @@ public class CartController {
     @ResponseBody
     public ResponseEntity deleteCartItem(@PathVariable("cartItemId") Long cartItemId,
                                          Principal principal){
+
         // 유효성 검증 예외처리
         if (!cartService.validateCartItem(cartItemId, principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
         }
         cartService.deleteCartItem(cartItemId);
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(cartItemId);
     }
     // CREATE ALL : 장바구니에 담긴 상품 한꺼번에 주문
-
+    @PostMapping("/cart/orders")
+    @ResponseBody
+    public ResponseEntity orderCartItem(@RequestBody CartOrderDto cartOrderDto,
+                                        Principal principal){
+        List<CartOrderDto> cartOrderDtoList = cartOrderDto.getCartOrderDtoList();
+        // 예외처리
+        if (cartOrderDtoList == null || cartOrderDtoList.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("주문할 상품 선택해주세요.");
+        }
+        // 서비스 계층 위임 : 장바구니 주문 상품 목록, 로그인 정보
+        Long orderId = cartService.orderCartItem(cartOrderDtoList, principal.getName());
+        return ResponseEntity.status(HttpStatus.OK).body(orderId);
+    }
 }
